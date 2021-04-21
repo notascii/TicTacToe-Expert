@@ -82,7 +82,7 @@ class Application(object):
         self.create_pawns()
         self.create_end_images()
 
-        # define gapx and gapy
+        # define gapx and gapy issou
 
         hide_menu_buttons()
 
@@ -97,6 +97,10 @@ class Application(object):
 
         smallButtonQuit = tk.Button(self.bottom_frame, image=smallButtonQuitImage, relief="flat", command=self.root.destroy)
         smallButtonQuit.pack(side=tk.LEFT)
+    
+        smallButtonSave = tk.Button(self.bottom_frame, text="Sauvegarder", relief="flat")
+        smallButtonSave.pack(side=tk.RIGHT)
+
         smallButtonReplay = tk.Button(self.bottom_frame, text="Rejouer", relief="flat", command=self.replay)
         smallButtonReplay.pack(side=tk.RIGHT)
     
@@ -206,7 +210,7 @@ class Application(object):
             self.canvasGrid.create_line(50*i + gapx, gapy, 50*i + gapx, 450 + gapy, fill="white") # lignes verticales
 
         for i in range(4): # lignes épaisses
-            self.canvasGrid.create_line(gapx, 150*i+gapy, 450+gapx, 150*i+gapy, width=9, fill="white") # lignes horizontales
+            self.canvasGrid.create_line(gapx - 4, 150*i+gapy, 450+gapx + 5, 150*i+gapy, width=9, fill="white") # lignes horizontales
             self.canvasGrid.create_line(150*i+gapx, gapy, 150*i+gapx, 450+gapy, width=9, fill="white") # lignes verticales
 
     def is_clic_in_canvas(self, x, y):
