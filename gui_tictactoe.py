@@ -32,7 +32,7 @@ class Application(object):
         self.topframe = tk.Frame(root)
         self.topframe.pack()
 
-        self.canvasGrid = tk.Canvas(self.topframe, height=500, width=500, bg="blue", highlightthickness=0)
+        self.canvasGrid = tk.Canvas(self.topframe, height=500, width=500, bg="black", highlightthickness=0)
         self.canvasGrid.pack()
 
     def create_pawns(self):
