@@ -59,7 +59,7 @@ class Application(object):
         pack_button(buttonPlay)
         self.buttons.append(buttonPlay)
 
-        buttonRules = tk.Button(self.root, relief="flat", text="Règles")
+        buttonRules = tk.Button(self.root, relief="flat", text="Règles", command=self.rules)
         pack_button(buttonRules)
         self.buttons.append(buttonRules)
 
@@ -76,7 +76,6 @@ class Application(object):
         """Cette fonction s'éxécute lorsque l'on clique sur le bouton Play.
         Elle cache les boutons, créé le canvas, affiche la grille sur le canvas
         et associe le clic gauche de la souris à la fonction clic."""
-
 
         self.create_frame_and_canvas()
         self.create_pawns()
@@ -103,6 +102,28 @@ class Application(object):
 
         smallButtonReplay = tk.Button(self.bottom_frame, text="Rejouer", relief="flat", command=self.replay)
         smallButtonReplay.pack(side=tk.RIGHT)
+    
+    def rules(self):
+        """Cette fonction s'éxécute lorsque l'on clique sur le bouton Règles."""
+
+        global rulesImage
+
+        def returnToMenu():
+            self.canvas_for_rules.delete("all")
+            self.canvas_for_rules.pack_forget()
+            returnButton.pack_forget()
+            self.display_menu_buttons()
+
+        hide_menu_buttons()
+
+        self.canvas_for_rules = tk.Canvas(self.root, width=500, height=500, bg="black", highlightthickness=0)
+        self.canvas_for_rules.pack()
+
+        rulesImage = tk.PhotoImage(file="images/regles.png")
+        self.canvas_for_rules.create_image(250, 275, image=rulesImage)
+
+        returnButton = tk.Button(self.root, text="Retour", command=returnToMenu)
+        returnButton.pack()
     
     def parameters(self):
         """Cette fonction s'éxécute lorsque l'on clique sur le bouton Paramètres."""
