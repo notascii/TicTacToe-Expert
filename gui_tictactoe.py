@@ -11,7 +11,6 @@ class Application(object):
         self.pawns = {"white":[], "yellow":[], "black":[]}
         self.end_images = []
         self.buttons = []
-        self.pawns_theme = ""
 
     ####################
     # CREATE FUNCTIONS #
@@ -72,6 +71,10 @@ class Application(object):
         pack_button(buttonQuit)
         self.buttons.append(buttonQuit)
 
+    ##########################
+    # MENU BUTTONS FUNCTIONS #
+    ##########################
+
     def play(self):
         """Cette fonction s'éxécute lorsque l'on clique sur le bouton Play.
         Elle cache les boutons, créé le canvas, affiche la grille sur le canvas
@@ -108,7 +111,7 @@ class Application(object):
 
         global rulesImage
 
-        def returnToMenu():
+        def local_return_to_menu():
             self.canvas_for_rules.delete("all")
             self.canvas_for_rules.pack_forget()
             returnButton.pack_forget()
@@ -122,37 +125,37 @@ class Application(object):
         rulesImage = tk.PhotoImage(file="images/regles.png")
         self.canvas_for_rules.create_image(250, 275, image=rulesImage)
 
-        returnButton = tk.Button(self.root, text="Retour", command=returnToMenu)
+        returnButton = tk.Button(self.root, text="Retour", command=local_return_to_menu)
         returnButton.pack()
     
     def parameters(self):
         """Cette fonction s'éxécute lorsque l'on clique sur le bouton Paramètres."""
 
-        global var
+        def local_return_to_menu():
+            radioButtonBlack.pack_forget()
+            radioButtonWhite.pack_forget()
+            returnButton.pack_forget()
+            b1.pack_forget()
+            self.display_menu_buttons()
 
         hide_menu_buttons()
 
-        var = tk.StringVar()
+        self.pawns_theme = tk.StringVar()
 
-        radioButtonBlack = tk.Radiobutton(self.root, text="Noir", variable=var, value="black")
-        radioButtonBlack.pack()
+        radioButtonBlack = tk.Radiobutton(self.root, text="Noir", variable=self.pawns_theme, value="black")
+        radioButtonBlack.pack(expand=True)
 
-        radioButtonWhite = tk.Radiobutton(self.root, text="Blanc", variable=var, value="white")
-        radioButtonWhite.pack()
+        radioButtonWhite = tk.Radiobutton(self.root, text="Blanc", variable=self.pawns_theme, value="white")
+        radioButtonWhite.pack(expand=True)
 
         b1 = tk.Button(self.root, text="click me", command=self.issou)
-        b1.pack()
+        b1.pack(expand=True)
 
-        self.pawns_theme = var.get()
-        print(self.pawns_theme)
-        # pb avec stringvar
-        # je peux print(var.get())
-        # mais je peux pas :
-        # a = var.get()
-        # print(a)
+        returnButton = tk.Button(self.root, text="Retour", command=local_return_to_menu)
+        returnButton.pack(side=tk.BOTTOM)
 
     def issou(self):
-        print(self.pawns_theme)
+        print(self.pawns_theme.get())
 
     def replay(self):
         """ """
