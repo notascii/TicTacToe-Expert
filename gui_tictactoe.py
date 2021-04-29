@@ -11,6 +11,7 @@ class Application(object):
         self.pawns = {"white":[], "yellow":[], "black":[]}
         self.end_images = []
         self.buttons = []
+        self.pawns_theme = "black"
 
     ####################
     # CREATE FUNCTIONS #
@@ -31,7 +32,7 @@ class Application(object):
         self.topframe = tk.Frame(root)
         self.topframe.pack()
 
-        self.canvasGrid = tk.Canvas(self.topframe, height=500, width=500, bg="black", highlightthickness=0)
+        self.canvasGrid = tk.Canvas(self.topframe, height=500, width=500, bg=self.pawns_theme, highlightthickness=0)
         self.canvasGrid.pack()
 
     def create_pawns(self):
@@ -80,6 +81,16 @@ class Application(object):
         Elle cache les boutons, créé le canvas, affiche la grille sur le canvas
         et associe le clic gauche de la souris à la fonction clic."""
 
+        def local_return_to_menu():
+            game.reset()
+            self.canvasGrid.delete("all")
+            self.canvasGrid.pack_forget()
+            #small_button_return.pack_forget()
+            #small_button_quit.pack_forget()
+            #small_button_save.pack_forget()
+            #small_button_replay.pack_forget()
+            #self.display_menu_buttons()
+
         self.create_frame_and_canvas()
         self.create_pawns()
         self.create_end_images()
@@ -97,14 +108,17 @@ class Application(object):
         self.bottom_frame = tk.Frame()
         self.bottom_frame.pack(side=tk.BOTTOM)
 
-        smallButtonQuit = tk.Button(self.bottom_frame, image=smallButtonQuitImage, relief="flat", command=self.root.destroy)
-        smallButtonQuit.pack(side=tk.LEFT)
-    
-        smallButtonSave = tk.Button(self.bottom_frame, text="Sauvegarder", relief="flat")
-        smallButtonSave.pack(side=tk.RIGHT)
+        small_button_return = tk.Button(self.bottom_frame, text="Retour", command=local_return_to_menu)
+        small_button_return.pack(side=tk.LEFT)
 
-        smallButtonReplay = tk.Button(self.bottom_frame, text="Rejouer", relief="flat", command=self.replay)
-        smallButtonReplay.pack(side=tk.RIGHT)
+        small_button_quit = tk.Button(self.bottom_frame, image=smallButtonQuitImage, relief="flat", command=self.root.destroy)
+        small_button_quit.pack(side=tk.LEFT)
+    
+        small_button_save = tk.Button(self.bottom_frame, text="Sauvegarder", relief="flat")
+        small_button_save.pack(side=tk.RIGHT)
+
+        small_button_replay = tk.Button(self.bottom_frame, text="Rejouer", relief="flat", command=self.replay)
+        small_button_replay.pack(side=tk.RIGHT)
     
     def rules(self):
         """Cette fonction s'éxécute lorsque l'on clique sur le bouton Règles."""
@@ -132,30 +146,39 @@ class Application(object):
         """Cette fonction s'éxécute lorsque l'on clique sur le bouton Paramètres."""
 
         def local_return_to_menu():
-            radioButtonBlack.pack_forget()
-            radioButtonWhite.pack_forget()
             returnButton.pack_forget()
+            black_pawns_button.pack_forget()
+            white_pawns_button.pack_forget()
             b1.pack_forget()
             self.display_menu_buttons()
 
         hide_menu_buttons()
 
-        self.pawns_theme = tk.StringVar()
-
+        """
         radioButtonBlack = tk.Radiobutton(self.root, text="Noir", variable=self.pawns_theme, value="black")
         radioButtonBlack.pack(expand=True)
 
         radioButtonWhite = tk.Radiobutton(self.root, text="Blanc", variable=self.pawns_theme, value="white")
         radioButtonWhite.pack(expand=True)
+        """
+
+        black_pawns_button = tk.Button(self.root, text="Noir", command=lambda: self.change_color("black"))
+        black_pawns_button.pack()
+
+        white_pawns_button = tk.Button(self.root, text="Blanc", command=lambda: self.change_color("white"))
+        white_pawns_button.pack()
 
         b1 = tk.Button(self.root, text="click me", command=self.issou)
-        b1.pack(expand=True)
+        b1.pack()
 
         returnButton = tk.Button(self.root, text="Retour", command=local_return_to_menu)
         returnButton.pack(side=tk.BOTTOM)
 
     def issou(self):
-        print(self.pawns_theme.get())
+        print(self.pawns_theme)
+    
+    def change_color(self, color):
+        self.pawns_theme = color
 
     def replay(self):
         """ """
@@ -425,7 +448,7 @@ if __name__ == "__main__":
     app = Application(500, 550)
     game = Game()
 
-    app.pawns_theme = "white"
+    app.pawns_theme = "black"
     scores = ia.Scores()
 
     root = app.create_root(app.geometry["width"], app.geometry["heigth"])
