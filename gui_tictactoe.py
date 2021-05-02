@@ -1,7 +1,5 @@
 import tkinter as tk
 from game import Game
-import ia
-
 
 class Application(object):
     def __init__(self, w, h):
@@ -12,6 +10,7 @@ class Application(object):
         self.end_images = []
         self.buttons = []
         self.pawns_theme = "black"
+        self.themes = {"black":"white", "white":"black"}
 
     ####################
     # CREATE FUNCTIONS #
@@ -22,20 +21,20 @@ class Application(object):
 
         self.root = tk.Tk()
         self.root.title("TicTacToe Expert")
-        self.root.configure(background="black")
+        self.root.configure(background=self.themes[self.pawns_theme])
         self.root.geometry(f"{w}x{h}")
         self.root.resizable(0, 0)
     
     def create_frame_and_canvas(self):
         """ """
 
-        self.topframe = tk.Frame(root)
+        self.topframe = tk.Frame(self.root)
         self.topframe.pack()
 
-        self.canvasGrid = tk.Canvas(self.topframe, height=500, width=500, bg=self.pawns_theme, highlightthickness=0)
+        self.canvasGrid = tk.Canvas(self.topframe, height=500, width=500, bg=self.themes[self.pawns_theme], highlightthickness=0)
         self.canvasGrid.pack()
 
-    def create_pawns(self):
+    def create_pawns_images(self):
         """ """
 
         for couleur in ["white", "yellow", "black"]:
@@ -81,18 +80,10 @@ class Application(object):
         Elle cache les boutons, créé le canvas, affiche la grille sur le canvas
         et associe le clic gauche de la souris à la fonction clic."""
 
-        def local_return_to_menu():
-            game.reset()
-            self.canvasGrid.delete("all")
-            self.canvasGrid.pack_forget()
-            #small_button_return.pack_forget()
-            #small_button_quit.pack_forget()
-            #small_button_save.pack_forget()
-            #small_button_replay.pack_forget()
-            #self.display_menu_buttons()
+        global smallButtonQuitImage
 
         self.create_frame_and_canvas()
-        self.create_pawns()
+        self.create_pawns_images()
         self.create_end_images()
 
         # define gapx and gapy issou
@@ -108,17 +99,15 @@ class Application(object):
         self.bottom_frame = tk.Frame()
         self.bottom_frame.pack(side=tk.BOTTOM)
 
-        small_button_return = tk.Button(self.bottom_frame, text="Retour", command=local_return_to_menu)
-        small_button_return.pack(side=tk.LEFT)
-
-        small_button_quit = tk.Button(self.bottom_frame, image=smallButtonQuitImage, relief="flat", command=self.root.destroy)
-        small_button_quit.pack(side=tk.LEFT)
-    
         small_button_save = tk.Button(self.bottom_frame, text="Sauvegarder", relief="flat")
-        small_button_save.pack(side=tk.RIGHT)
+        small_button_save.pack(side=tk.LEFT)
 
         small_button_replay = tk.Button(self.bottom_frame, text="Rejouer", relief="flat", command=self.replay)
-        small_button_replay.pack(side=tk.RIGHT)
+        small_button_replay.pack(side=tk.LEFT)
+        
+        smallButtonQuitImage = tk.PhotoImage(file="images/buttonQuit_small.png")
+        small_button_quit = tk.Button(self.bottom_frame, image=smallButtonQuitImage, relief="flat", command=self.root.destroy)
+        small_button_quit.pack(side=tk.LEFT)
     
     def rules(self):
         """Cette fonction s'éxécute lorsque l'on clique sur le bouton Règles."""
@@ -204,6 +193,9 @@ class Application(object):
     def draw_pawn_on_canvas(self, xmoy, ymoy, player, color):
         """Dessine un pion du joueur sur le canvas aux coordonnées (xmoy, ymoy)."""
 
+        if color == None:
+            color = self.pawns_theme
+
         if player:
             # joueur o
             # canvas.create_oval(xmoy-20, ymoy-20, xmoy+20, ymoy+20, outline="white", width=4)
@@ -244,7 +236,7 @@ class Application(object):
         """ """
         
         for i in range(1,10):
-            self.draw_outline(i, "white", 3)
+            self.draw_outline(i, self.pawns_theme, 3)
 
     def display_grid(self):
         """Affiche la grille sur le canvas. Laisse un peu de place dans le coin supérieur
@@ -253,12 +245,12 @@ class Application(object):
         gapx, gapy = self.gapx, self.gapy
 
         for i in range(10): # lignes fines
-            self.canvasGrid.create_line(gapx, 50*i + gapy, 450 + gapx, 50*i + gapy, fill="white") # lignes horizontales
-            self.canvasGrid.create_line(50*i + gapx, gapy, 50*i + gapx, 450 + gapy, fill="white") # lignes verticales
+            self.canvasGrid.create_line(gapx, 50*i + gapy, 450 + gapx, 50*i + gapy, fill=self.pawns_theme) # lignes horizontales
+            self.canvasGrid.create_line(50*i + gapx, gapy, 50*i + gapx, 450 + gapy, fill=self.pawns_theme) # lignes verticales
 
         for i in range(4): # lignes épaisses
-            self.canvasGrid.create_line(gapx - 4, 150*i+gapy, 450+gapx + 5, 150*i+gapy, width=9, fill="white") # lignes horizontales
-            self.canvasGrid.create_line(150*i+gapx, gapy, 150*i+gapx, 450+gapy, width=9, fill="white") # lignes verticales
+            self.canvasGrid.create_line(gapx - 4, 150*i+gapy, 450+gapx + 5, 150*i+gapy, width=9, fill=self.pawns_theme) # lignes horizontales
+            self.canvasGrid.create_line(150*i+gapx, gapy, 150*i+gapx, 450+gapy, width=9, fill=self.pawns_theme) # lignes verticales
 
     def is_clic_in_canvas(self, x, y):
         if not ((self.gapx <= x <= self.gapx + 450) and (self.gapy <= y <= self.gapy + 450)):
@@ -451,9 +443,7 @@ if __name__ == "__main__":
     app.pawns_theme = "black"
     scores = ia.Scores()
 
-    root = app.create_root(app.geometry["width"], app.geometry["heigth"])
-  
-    smallButtonQuitImage = tk.PhotoImage(file="images/buttonQuit_small.png")
+    app.create_root(app.geometry["width"], app.geometry["heigth"])
 
     app.display_menu_buttons()
 
